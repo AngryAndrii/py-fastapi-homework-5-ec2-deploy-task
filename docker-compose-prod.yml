@@ -1,6 +1,6 @@
 services:
   db:
-    image: 'postgres:latest'
+    image: 'postgres:15'
     container_name: postgres_theater
     env_file:
       - .env
@@ -8,7 +8,7 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - postgres_theater_data:/var/lib/postgresql/data/pgdata
+      - postgres_theater_data:/var/lib/postgresql/data/
     networks:
       - theater_network
     healthcheck:
@@ -73,12 +73,8 @@ services:
       - theater_network
 
   mailhog:
-    restart: always
-    build:
-      context: .
-      dockerfile: ./docker/mailhog/Dockerfile
+    image: mailhog/mailhog:latest
     container_name: mailhog_theater
-    command: ["/bin/bash", "-c", "/commands/setup_mailhog_auth.sh && /go/bin/MailHog"]
     ports:
       - "8025:8025"
       - "1025:1025"
